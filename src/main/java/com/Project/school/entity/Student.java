@@ -45,6 +45,10 @@ public class Student {
         this.lastname = lastname;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     @OneToMany(mappedBy = "student")
     private List<Grades> grades;
 
