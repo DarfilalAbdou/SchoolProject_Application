@@ -5,14 +5,24 @@ public class DirectorDTO {
     private Long id;
     private String lastName;
     private String email;
+    private String password;
 
     public DirectorDTO() {
     }
 
-    public DirectorDTO(Long id, String lastName, String email) {
+    public DirectorDTO(Long id, String lastName, String email, String password) {
         this.id = id;
         this.lastName = lastName;
         this.email = email;
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Long getId() {

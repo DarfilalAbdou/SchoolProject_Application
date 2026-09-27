@@ -6,15 +6,25 @@ public class GradesDTO {
     private String grade;
     private Long studentId;
     private Long courseId;
+    private String courseName;
 
     public GradesDTO() {
     }
 
-    public GradesDTO(Long id, String grade, Long studentId, Long courseId) {
+    public GradesDTO(Long id, String grade, Long studentId, Long courseId, String courseName) {
         this.id = id;
         this.grade = grade;
         this.studentId = studentId;
         this.courseId = courseId;
+        this.courseName = courseName;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
     }
 
     public Long getId() {

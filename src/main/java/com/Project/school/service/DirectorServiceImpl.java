@@ -39,7 +39,7 @@ public class DirectorServiceImpl implements DirectorService {
 
     @Override
     public DirectorDTO createDirector(DirectorDTO dto) {
-        Director director = new Director(dto.getLastName(), dto.getEmail());
+        Director director = new Director(dto.getLastName(), dto.getEmail(), dto.getPassword());
         Director saved = directorRepository.save(director);
         logger.info("Created director id=" + saved.getId() + " lastName=" + saved.getName());
         return toDTO(saved);
@@ -54,6 +54,7 @@ public class DirectorServiceImpl implements DirectorService {
                 });
         director.setName(dto.getLastName());
         director.setEmail(dto.getEmail());
+        director.setPassword(dto.getPassword());
 
         Director updated = directorRepository.save(director);
         logger.info("Updated director id:" + updated.getId());
@@ -71,6 +72,6 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     private DirectorDTO toDTO(Director director) {
-        return new DirectorDTO(director.getId(), director.getName(), director.getEmail());
+        return new DirectorDTO(director.getId(), director.getName(), director.getEmail(), director.getPassword());
     }
 }

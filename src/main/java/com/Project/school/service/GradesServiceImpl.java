@@ -113,7 +113,8 @@ public class GradesServiceImpl implements GradesService {
                 grade.getId(),
                 grade.getGrade(),
                 grade.getStudent().getId(),
-                grade.getCourse().getId()
+                grade.getCourse().getId(),
+                grade.getCourse().getName()
         );
     }
 }

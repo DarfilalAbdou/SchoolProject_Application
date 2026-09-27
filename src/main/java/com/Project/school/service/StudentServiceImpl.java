@@ -42,6 +42,8 @@ public class StudentServiceImpl implements StudentService {
         Student student = new Student();
         student.setFirstname(dto.getFirstname());
         student.setLastname(dto.getLastname());
+        student.setEmail(dto.getEmail());
+        student.setPassword(dto.getPassword());
 
         Student saved = studentRepository.save(student);
         logger.info("Created student id=" + saved.getId() + " lastname=" + saved.getLastname());
@@ -57,6 +59,8 @@ public class StudentServiceImpl implements StudentService {
                 });
         student.setFirstname(dto.getFirstname());
         student.setLastname(dto.getLastname());
+        student.setEmail(dto.getEmail());
+        student.setPassword(dto.getPassword());
 
         Student updated = studentRepository.save(student);
         logger.info("Updated student id:" + updated.getId());
@@ -74,6 +78,6 @@ public class StudentServiceImpl implements StudentService {
     }
 
     private StudentDTO toDTO(Student student) {
-        return new StudentDTO(student.getId(), student.getFirstname(), student.getLastname(), student.getEmail());
+        return new StudentDTO(student.getId(), student.getFirstname(), student.getLastname(), student.getEmail(), student.getPassword());
     }
 }

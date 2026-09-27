@@ -18,12 +18,24 @@ public class Director {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(name = "password")
+    private String password;
+
     public Director() {
     }
 
-    public Director(String lastName, String email) {
+    public Director(String lastName, String email, String password) {
         this.lastName = lastName;
         this.email = email;
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Long getId() {

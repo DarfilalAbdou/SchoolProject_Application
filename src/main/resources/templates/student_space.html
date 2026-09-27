@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Personal Space</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { padding-top: 50px; background-color: #f8f9fa; }
+        .container { max-width: 800px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { color: #007bff; margin-bottom: 20px; }
+        .student-info { margin-bottom: 30px; }
+        .grade-a { color: green; font-weight: bold; }
+        .grade-f { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="student-info">
+            <h1 th:text="'Welcome, ' + ${student.firstname} + ' ' + ${student.lastname}">Welcome, Student</h1>
+            <p><strong>Email:</strong> <span th:text="${student.email}">student@example.com</span></p>
+            <p><strong>Student ID:</strong> <span th:text="${student.id}">123</span></p>
+        </div>
+
+        <h3>Your Grades</h3>
+        <table class="table table-striped table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Course Name</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="grade : ${grades}">
+                    <td th:text="${grade.courseName}">Course Name</td>
+                    <td th:text="${grade.grade}" th:class="${grade.grade == 'A' || grade.grade == 'A+' || grade.grade == 'A-' ? 'grade-a' : (grade.grade == 'F' ? 'grade-f' : '')}">A</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(grades)}">
+                    <td colspan="2" class="text-center">No grades found.</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="mt-4">
+            <a href="/" class="btn btn-primary btn-sm">Logout</a>
+        </div>
+    </div>
+</body>
+</html>

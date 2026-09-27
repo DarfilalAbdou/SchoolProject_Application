@@ -6,15 +6,17 @@ public class StudentDTO {
     private String firstname;
     private String lastname;
     private String email;
+    private String password;
 
     public StudentDTO() {
     }
 
-    public StudentDTO(Long id, String firstname, String lastname, String email) {
+    public StudentDTO(Long id, String firstname, String lastname, String email, String password) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
+        this.password = password;
     }
 
     public Long getId() {
@@ -47,5 +49,13 @@ public class StudentDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
