@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Space - School</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { padding-top: 50px; background-color: #f8f9fa; }
+        .container { max-width: 1000px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { color: #007bff; margin-bottom: 20px; }
+        .teacher-info { margin-bottom: 30px; border-bottom: 2px solid #eee; padding-bottom: 20px; }
+        .course-card { margin-bottom: 30px; border: 1px solid #dee2e6; border-radius: 8px; overflow: hidden; }
+        .course-header { background-color: #007bff; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .grade-a { color: green; font-weight: bold; }
+        .grade-f { color: red; font-weight: bold; }
+        .action-btns { white-space: nowrap; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Messages -->
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <div class="teacher-info">
+            <h1 th:text="'Welcome, Prof. ' + ${director.lastName}">Welcome, Teacher</h1>
+            <p><strong>Email:</strong> <span th:text="${director.email}">teacher@example.com</span></p>
+            <p><strong>Teacher ID:</strong> <span th:text="${director.id}">1</span></p>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3>Your Courses</h3>
+            <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#addCourseModal">Add Course</button>
+        </div>
+
+        <div th:if="${#lists.isEmpty(courses)}" class="alert alert-info">
+            You are not assigned to any courses yet.
+        </div>
+
+        <div th:each="course : ${courses}" class="course-card">
+            <div class="course-header">
+                <h4 th:text="${course.name}" class="m-0">Course Name</h4>
+                <form th:action="@{'/director/' + ${director.id} + '/course/delete'}" method="post" onsubmit="return confirm('Are you sure you want to delete this course?')">
+                    <input type="hidden" name="courseId" th:value="${course.id}">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete Course</button>
+                </form>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5>Students & Grades</h5>
+                    <button class="btn btn-primary btn-sm" data-toggle="modal" th:data-target="'#addGradeModal' + ${course.id}">Add Grade</button>
+                </div>
+                <table class="table table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Grade</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="grade : ${courseGrades.get(course.id)}">
+                            <td th:text="${grade.studentId}">Student ID</td>
+                            <td th:text="${grade.grade}" th:class="${grade.grade == 'A' || grade.grade == 'A+' || grade.grade == 'A-' ? 'grade-a' : (grade.grade == 'F' ? 'grade-f' : '')}">A</td>
+                            <td class="action-btns">
+                                <button class="btn btn-warning btn-sm" data-toggle="modal" th:data-target="'#editGradeModal' + ${grade.id}">Edit</button>
+                                <form th:action="@{'/director/' + ${director.id} + '/grade/delete'}" method="post" style="display:inline;" onsubmit="return confirm('Delete this grade?')">
+                                    <input type="hidden" name="gradeId" th:value="${grade.id}">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
+
+                            <!-- Edit Grade Modal -->
+                            <div class="modal fade" th:id="'editGradeModal' + ${grade.id}" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <form th:action="@{'/director/' + ${director.id} + '/grade/update'}" method="post">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Edit Grade</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <input type="hidden" name="gradeId" th:value="${grade.id}">
+                                                <div class="form-group">
+                                                    <label>Grade</label>
+                                                    <input type="text" name="grade" class="form-control" th:value="${grade.grade}" required>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(courseGrades.get(course.id))}">
+                            <td colspan="3" class="text-center text-muted">No students enrolled in this course.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Add Grade Modal for this course -->
+            <div class="modal fade" th:id="'addGradeModal' + ${course.id}" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form th:action="@{'/director/' + ${director.id} + '/grade/add'}" method="post">
+                            <div class="modal-header">
+                                <h5 class="modal-title" th:text="'Add Grade to ' + ${course.name}">Add Grade</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" name="courseId" th:value="${course.id}">
+                                <div class="form-group">
+                                    <label>Student</label>
+                                    <select name="studentId" class="form-control" required>
+                                        <option value="">Select Student...</option>
+                                        <option th:each="s : ${allStudents}" th:value="${s.id}" th:text="${s.firstname} + ' ' + ${s.lastname} + ' (ID: ' + ${s.id} + ')'"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Grade</label>
+                                    <input type="text" name="grade" class="form-control" placeholder="A, B+, C..." required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-success">Add Grade</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Course Modal -->
+        <div class="modal fade" id="addCourseModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form th:action="@{'/director/' + ${director.id} + '/course/add'}" method="post">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add New Course</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Course Name</label>
+                                <input type="text" name="courseName" class="form-control" placeholder="e.g. Advanced Mathematics" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Add Course</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <a href="/" class="btn btn-secondary">Logout</a>
+        </div>
+    </div>
+
+    <!-- Scripts for Bootstrap Modals -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

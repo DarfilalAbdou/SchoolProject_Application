@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>School - Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { background-color: #f8f9fa; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .login-container { max-width: 400px; width: 100%; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        .login-container h2 { color: #007bff; text-align: center; margin-bottom: 25px; }
+        .btn-primary { width: 100%; }
+        .error-message { color: #dc3545; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 5px; margin-bottom: 20px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>School Login</h2>
+        
+        <div th:if="${error}" class="error-message" th:text="${error}">
+            Error message goes here
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label for="role">Role</label>
+                <select class="form-control" id="role" name="role">
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher (Director)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="userId">ID</label>
+                <input type="number" class="form-control" id="userId" name="userId" placeholder="Enter your ID" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+        
+        <div class="mt-4 text-center">
+            <small class="text-muted">Student: ID 1 / pass123<br>Teacher: ID 1 / admin123</small>
+        </div>
+    </div>
+</body>
+</html>
