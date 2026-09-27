@@ -1,6 +1,8 @@
 # School Management System
 
 A Spring Boot application for managing school data, including students, courses, directors, and grades. It features both a REST API and a user-friendly web interface for students and teachers (directors).
+MADE BY DARFILAL ABDOU-SAMAD and COUTURIER AMBROISE
+
 
 ## Features
 
